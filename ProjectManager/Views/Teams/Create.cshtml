@@ -1,0 +1,53 @@
+﻿@model ProjectManager.Domain.Entities.Team
+
+@{
+    ViewData["Title"] = "Create Team";
+}
+
+<div class="row d-flex flex-row justify-content-center">
+    <div class="col-md-6">
+        <h1>@ViewData["Title"]</h1>
+        <hr />
+
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group mt-1">
+                <label asp-for="Name" class="control-label">Team Name</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ProjectId" class="control-label">Project</label>
+                <select asp-for="ProjectId" class="form-select"></select>
+                <span asp-validation-for="ProjectId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LeadId" class="control-label">Team Lead</label>
+                <select asp-for="LeadId" class="form-select"></select>
+                <span asp-validation-for="LeadId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+
+        <div class="mt-2">
+            <a asp-action="Index" class="btn btn-outline-dark">Back to Teams</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(() => {
+            makeProjectSearchBox($("#ProjectId"), "@Url.Action("Search", "Projects")")
+            makeEmployeeSearchBox($("#LeadId"), "@Url.Action("Search", "Employees")")
+        })
+    </script>
+}

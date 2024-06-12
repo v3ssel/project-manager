@@ -1,0 +1,56 @@
+﻿@model IEnumerable<ProjectManager.Domain.Entities.Employee>
+
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<div class="d-sm-flex flex-row align-items-end justify-content-between">
+    <h1>@ViewData["Title"]</h1>
+
+    @if (User.IsInRole("admin"))
+    {
+        <a asp-action="Create" class="btn btn-outline-info">Add employee</a>
+    }
+</div>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="align-middle">
+                    @item.FirstName
+                </td>
+                <td class="align-middle">
+                    @item.MiddleName
+                </td>
+                <td class="align-middle">
+                    @item.LastName
+                </td>
+                <td class="align-middle">
+                    @item.Email
+                </td>
+
+                <td class="align-middle text-center">
+                    <a class="btn btn-outline-info mt-1" asp-action="Details" asp-route-id="@item.Id">Details</a>
+
+                    @if (User.IsInRole("admin"))
+                    {
+                        <a class="btn btn-outline-primary mt-1" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a class="btn btn-outline-danger mt-1" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

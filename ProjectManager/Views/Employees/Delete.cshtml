@@ -1,0 +1,24 @@
+﻿@model ProjectManager.Domain.Entities.Employee
+
+@{
+    ViewData["Title"] = "Delete Employee";
+}
+
+
+<div class="row d-flex flex-row justify-content-center">
+    <div class="col-md-6">
+        <h2>Are you sure you want to delete this employee?</h2>
+        <h4>@string.Join(' ', Model.FirstName, Model.MiddleName, Model.LastName)</h4>
+        <h4>Employee will be removed from current teams. Lead teams will be deleted.</h4>
+        <hr />
+    
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="Delete" class="btn btn-danger" />
+
+            <div class="mt-2">
+                <a asp-action="Index" class="btn btn-outline-dark">Back to Employees</a>
+            </div>
+        </form>
+    </div>
+</div>

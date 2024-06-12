@@ -1,0 +1,23 @@
+﻿@model ProjectManager.Domain.Entities.Team
+
+@{
+    ViewData["Title"] = "Delete Team";
+}
+
+
+<div class="row d-flex flex-row justify-content-center">
+    <div class="col-md-6">
+        <h2>Are you sure you want to delete this team?</h2>
+        <h4>@Model.Name</h4>
+        <hr />
+    
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="Delete" class="btn btn-danger" />
+
+            <div class="mt-2">
+                <a asp-action="Index" class="btn btn-outline-dark">Back to Teams</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,175 @@
+﻿@model IEnumerable<ProjectManager.Domain.Entities.Project>
+
+@{
+    ViewData["Title"] = "Projects";
+}
+
+<div class="d-sm-flex flex-row align-items-end justify-content-between">
+    <h1>@ViewData["Title"]</h1>
+
+    <div class="col-sm-2">
+        <label for="startTimePicker">Start Time Filter</label>
+        <input type="datetime-local" id="startTimePicker" name="startTimePicker" onchange="applyDateFilters()" />
+    </div>
+
+    <div class="col-sm-2">
+        <label for="endTimePicker">End Time Filter</label>
+        <input type="datetime-local" id="endTimePicker" name="endTimePicker" onchange="applyDateFilters()" />
+    </div>
+
+    @if (User.IsInRole("admin"))
+    {
+        <a asp-action="Create" class="btn btn-outline-info">Create project</a>
+    }
+</div>
+
+<table id="projectsTable" class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="align-middle">
+                <button class="btn text-decoration-underline" style="font-weight: 700;" type="button" onclick="sortTable('client')">Client</button>
+            </th>
+            
+            <th class="align-middle">
+                <button class="btn text-decoration-underline" style="font-weight: 700;" type="button" onclick="sortTable('name')">Name</button>
+            </th>
+
+            <th class="align-middle">
+                Description
+            </th>
+
+            <th class="align-middle">
+                <button class="btn text-decoration-underline" style="font-weight: 700;" type="button" onclick="sortTable('sdate')">Start Time</button>
+            </th>
+            
+            <th class="align-middle">
+                <button class="btn text-decoration-underline" style="font-weight: 700;" type="button" onclick="sortTable('edate')">End Time</button>
+            </th>
+            
+            <th class="align-middle text-center">
+                <button class="btn text-decoration-underline" style="font-weight: 700;" type="button" onclick="sortTable('priority')">Priority</button>
+            </th>
+            
+            <th class="align-middle text-center">
+                <input class="form-check-input" id="orderCbox" type="checkbox" checked />
+                <label for="orderCbox">Ascending Order</label>
+            </th>
+        </tr>
+    </thead>
+
+    <tbody id="projectsTableBody">
+    @foreach (var item in Model) {
+        <tr>
+            <td class="align-middle">
+                @item.Client?.Name
+            </td>
+            <td class="align-middle">
+                @item.Name
+            </td>
+            <td class="align-middle">
+                @item.Description
+            </td>
+            <td class="align-middle">
+                @item.StartTime.ToString("g")
+            </td>
+            <td class="align-middle">
+                @item.EndTime.ToString("g")
+            </td>
+            <td class="align-middle text-center">
+                @item.Priority
+            </td>
+
+            <td class="align-middle text-center">
+                <a class="btn btn-outline-info mt-1" asp-action="Details" asp-route-id="@item.Id">Details</a>
+
+                @if (User.IsInRole("admin") || User.IsInRole("manager"))
+                {
+                    <a class="btn btn-outline-primary mt-1" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                }
+
+                @if (User.IsInRole("admin"))
+                {
+                    <a class="btn btn-outline-danger mt-1" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        function applyDateFilters() {
+            var startTimeFilter = $("#startTimePicker")[0].value
+            var endTimeFilter = $("#endTimePicker")[0].value
+
+            sendSortRequest({
+                sortColumn: null,
+                desc: null,
+                start: startTimeFilter == "" ? null : startTimeFilter,
+                end: endTimeFilter == "" ? null : endTimeFilter
+            })
+        }
+
+        function sortTable(column) {
+            var startTimeFilter = $("#startTimePicker")[0].value
+            var endTimeFilter = $("#endTimePicker")[0].value
+
+            sendSortRequest({
+                sortColumn: column,
+                desc: $("#orderCbox")[0].checked,
+                start: startTimeFilter == null ? null : startTimeFilter,
+                end: endTimeFilter == null ? null : endTimeFilter
+            })
+        }
+
+        function sendSortRequest(data) {
+            $.ajax({
+                url: '@Url.Action("Sort", "Projects")',
+                type: 'GET',
+                data: data,
+                success: function (result) {
+                    rebuildTable(result)
+                },
+                error: function () {
+                    alert('Error occurred while sorting.');
+                }
+            })
+        }
+
+        function rebuildTable(newProjectsData) {
+            var tableBody = $('#projectsTableBody')
+            tableBody.empty();
+
+            var isUserAdmin = '@User.IsInRole("admin")' === 'True'
+            var isUserManager = '@User.IsInRole("manager")' === 'True'
+
+            newProjectsData.forEach(project => {
+                var startTime = new Date(project.startTime)
+                var endTime = new Date(project.endTime)
+
+                let row =
+                    `<tr>
+                        <td class="align-middle">${project.client.name}</td>
+                        <td class="align-middle">${project.name}</td>
+                        <td class="align-middle">${project.description ?? ""}</td>
+                        <td class="align-middle">${startTime.toLocaleDateString()} ${startTime.toLocaleTimeString().slice(0, -3)}</td>
+                        <td class="align-middle">${endTime.toLocaleDateString()} ${endTime.toLocaleTimeString().slice(0, -3)}</td>
+                        <td class="align-middle text-center">${project.priority}</td>
+                        <td class="align-middle text-center">
+                            <a class="btn btn-outline-info mt-1 me-1" href="/Projects/Details/${project.id}">Details</a>`
+
+                        if (isUserAdmin || isUserManager) {
+                            row += `<a class="btn btn-outline-primary mt-1 me-1" href="/Projects/Edit/${project.id}">Edit</a>`
+                        }
+
+                        if (isUserAdmin) {
+                            row += `<a class="btn btn-outline-danger mt-1 me-1" href="/Projects/Delete/${project.id}">Delete</a>`
+                        }
+                    row += `</td></tr>`;
+
+                tableBody.append(row);
+            });
+        }
+    </script>
+}

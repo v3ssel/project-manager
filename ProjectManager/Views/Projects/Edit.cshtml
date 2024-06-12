@@ -1,0 +1,72 @@
+﻿@model Web.Models.ProjectViewModel
+
+@{
+    ViewData["Title"] = $"Edit {Model.Project!.Name}";
+}
+
+
+<div class="row d-flex flex-row justify-content-center">
+    <div class="col-md-6">
+        <h2>@ViewData["Title"]</h2>
+        <hr />
+
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Project.ClientId" class="control-label">Client</label>
+                <select asp-for="Project.ClientId" class="form-select"
+                        asp-items="@(new SelectList(ViewBag.ClientList, "Id", "Name"))"
+                        disabled="@(!User.IsInRole("admin"))"></select>
+                <span asp-validation-for="Project.ClientId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-1">
+                <label asp-for="Project.Name" class="control-label">Project Name</label>
+                <input asp-for="Project.Name" class="form-control"/>
+                <span asp-validation-for="Project.Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-1">
+                <label asp-for="Project.Description" class="control-label"></label>
+                <textarea asp-for="Project.Description" class="form-control text-wrap"></textarea>
+                <span asp-validation-for="Project.Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-1">
+                <label asp-for="Project.StartTime" class="control-label">Start Time</label>
+                <input asp-for="Project.StartTime" class="form-control" type="datetime-local" />
+                <span asp-validation-for="Project.StartTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-1">
+                <label asp-for="Project.EndTime" class="control-label">End Time</label>
+                <input asp-for="Project.EndTime" class="form-control" type="datetime-local" />
+                <span asp-validation-for="Project.EndTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-1">
+                <label asp-for="Project.Priority" class="control-label"></label>
+                <input asp-for="Project.Priority" class="form-control" />
+                <span asp-validation-for="Project.Priority" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-1">
+                <label asp-for="ProjectFiles" class="control-label">Project Files</label>
+                <input asp-for="ProjectFiles" class="form-control" type="file" multiple />
+                <span asp-validation-for="ProjectFiles" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+
+        <div class="mt-2">
+            <a asp-action="Index" class="btn btn-outline-dark">Back to Projects</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
