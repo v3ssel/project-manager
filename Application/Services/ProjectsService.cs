@@ -39,19 +39,14 @@ namespace ProjectManager.Application.Services
             return await _projectsRepository.SearchByNameAsync(name);
         }
 
-        public async Task<IEnumerable<ProjectFile>> GetProjectFilesAsync(Guid projectId)
-        {
-            return await _projectsRepository.GetProjectFilesAsync(projectId);
-        }
-
-        public async Task<ProjectFile?> GetProjectFileAsync(Guid projectId, int fileId)
-        {
-            return await _projectsRepository.GetProjectFileAsync(projectId, fileId);
-        }
-
         public async Task<IEnumerable<Project>> GetInDateRange(DateTime start, DateTime end)
         {
             return await _projectsRepository.GetInDateRange(start, end);
+        }
+
+        public async Task<IEnumerable<Project>> GetByClientAsync(Client client)
+        {
+            return await _projectsRepository.GetByClientAsync(client);
         }
     }
 }

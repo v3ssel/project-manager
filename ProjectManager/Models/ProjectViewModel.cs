@@ -9,5 +9,6 @@ namespace Web.Models
         public Project Project { get; set; } = null!;
 
         public IList<IFormFile>? ProjectFiles { get; set; } = new List<IFormFile>();
+        public IEnumerable<Client>? Clients { get; set; }
     }
 }

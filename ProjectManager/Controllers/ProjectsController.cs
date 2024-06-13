@@ -3,18 +3,17 @@ using ProjectManager.Domain.Entities;
 using ProjectManager.Application.Services.Interfaces;
 using Web.Models;
 using Microsoft.AspNetCore.Authorization;
-using Application.Services.Interfaces;
 
 namespace ProjectManager.Controllers
 {
     public class ProjectsController : Controller
     {
         private readonly IProjectsService _projectsService;
+        private readonly IProjectFilesService _fileService;
         private readonly IClientsService _clientsService;
-        private readonly IFileManagerService _fileService;
         private readonly string _uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
 
-        public ProjectsController(IProjectsService projectsService, IClientsService clientsService, IFileManagerService fileService)
+        public ProjectsController(IProjectsService projectsService, IClientsService clientsService, IProjectFilesService fileService)
         {
             _projectsService = projectsService;
             _clientsService = clientsService;
@@ -48,8 +47,12 @@ namespace ProjectManager.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create()
         {
-            ViewBag.ClientList = await _clientsService.GetAllAsync();
-            return View();
+            var projectVm = new ProjectViewModel()
+            {
+                Clients = await _clientsService.GetAllAsync()
+            };
+
+            return View(projectVm);
         }
 
         [HttpPost]
@@ -61,7 +64,8 @@ namespace ProjectManager.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    ViewBag.ClientList = await _clientsService.GetAllAsync();
+                    projectVm.Clients = await _clientsService.GetAllAsync();
+
                     return View(projectVm);
                 }
 
@@ -103,9 +107,9 @@ namespace ProjectManager.Controllers
             var projectVm = new ProjectViewModel()
             {
                 Project = project,
+                Clients = await _clientsService.GetAllAsync()
             };
 
-            ViewBag.ClientList = await _clientsService.GetAllAsync();
             return View(projectVm);
         }
 
@@ -118,7 +122,7 @@ namespace ProjectManager.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    ViewBag.ClientList = await _clientsService.GetAllAsync();
+                    projectVm.Clients = await _clientsService.GetAllAsync();
                     return View(projectVm);
                 }
 
@@ -172,12 +176,7 @@ namespace ProjectManager.Controllers
                     return NotFound();
                 }
 
-                var files = await _projectsService.GetProjectFilesAsync(id);
-                foreach(var file in files)
-                {
-                    _fileService.DeleteProjectFile(file.FilePath!);
-                }
-
+                await _fileService.DeleteAllProjectFilesAsync(project);
                 await _projectsService.DeleteAsync(project);
             }
             catch
@@ -220,7 +219,7 @@ namespace ProjectManager.Controllers
         [HttpGet]
         public async Task<IActionResult> Download(Guid projectId, int fileId)
         {
-            var file = await _projectsService.GetProjectFileAsync(projectId, fileId);
+            var file = await _fileService.GetProjectFileAsync(projectId, fileId);
             if (file == null)
             {
                 return NotFound();
@@ -236,7 +235,7 @@ namespace ProjectManager.Controllers
             try
             {
                 var project = await _projectsService.GetByIdAsync(projectId);
-                var projectFile = await _projectsService.GetProjectFileAsync(projectId, fileId);
+                var projectFile = await _fileService.GetProjectFileAsync(projectId, fileId);
                 if (project == null || projectFile == null)
                 {
                     return NotFound();
@@ -245,7 +244,7 @@ namespace ProjectManager.Controllers
                 project.ProjectFiles.Remove(projectFile);
                 await _projectsService.UpdateAsync(project);
 
-                _fileService.DeleteProjectFile(projectFile.FilePath!);
+                _fileService.DeleteProjectFile(projectFile);
             }
             catch
             {

@@ -6,7 +6,6 @@ using ProjectManager.Application.Services;
 using ProjectManager.Application.Repositories;
 using ProjectManager.Application.Services.Interfaces;
 using ProjectManager.Web.Extensions;
-using Application.Services.Interfaces;
 
 namespace ProjectManager.Web
 {
@@ -39,7 +38,7 @@ namespace ProjectManager.Web
             builder.Services.AddScoped<IClientsService, ClientsService>();
             builder.Services.AddScoped<IEmployeesService, EmployeesService>();
             builder.Services.AddScoped<ITeamsService, TeamsService>();
-            builder.Services.AddScoped<IFileManagerService, FileManagerService>();
+            builder.Services.AddScoped<IProjectFilesService, ProjectFilesService>();
 
             var app = builder.Build();
 

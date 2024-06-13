@@ -63,7 +63,7 @@ namespace Web.Controllers
             }
             catch
             {
-                RedirectToAction("Error", "Home");
+                return RedirectToAction("Error", "Home");
             }
 
             return RedirectToAction(nameof(Index));
@@ -154,7 +154,7 @@ namespace Web.Controllers
             }
             catch
             {
-                RedirectToAction("Error", "Home");
+                return RedirectToAction("Error", "Home");
             }
 
             return RedirectToAction(nameof(Index));

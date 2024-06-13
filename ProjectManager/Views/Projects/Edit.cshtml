@@ -15,7 +15,7 @@
             <div class="form-group">
                 <label asp-for="Project.ClientId" class="control-label">Client</label>
                 <select asp-for="Project.ClientId" class="form-select"
-                        asp-items="@(new SelectList(ViewBag.ClientList, "Id", "Name"))"
+                        asp-items="@(new SelectList(Model.Clients, "Id", "Name"))"
                         disabled="@(!User.IsInRole("admin"))"></select>
                 <span asp-validation-for="Project.ClientId" class="text-danger"></span>
             </div>

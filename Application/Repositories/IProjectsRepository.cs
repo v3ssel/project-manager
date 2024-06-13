@@ -11,6 +11,8 @@ namespace ProjectManager.Application.Repositories
     {
         Task<IEnumerable<Project>> SearchByNameAsync(string name);
         Task<IEnumerable<Project>> GetInDateRange(DateTime start, DateTime end);
+        Task<IEnumerable<Project>> GetByClientAsync(Client client);
+        
         Task<IEnumerable<ProjectFile>> GetProjectFilesAsync(Guid projectId);
         Task<ProjectFile?> GetProjectFileAsync(Guid projectId, int fileId);
     }

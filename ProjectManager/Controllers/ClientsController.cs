@@ -9,10 +9,14 @@ namespace ProjectManager.Controllers
     public class ClientsController : Controller
     {
         private readonly IClientsService _clientsService;
+        private readonly IProjectsService _projectsService;
+        private readonly IProjectFilesService _projectFilesService;
 
-        public ClientsController(IClientsService clientsService)
+        public ClientsController(IClientsService clientsService, IProjectsService projectsService, IProjectFilesService projectFilesService)
         {
             _clientsService = clientsService;
+            _projectsService = projectsService;
+            _projectFilesService = projectFilesService;
         }
 
         [HttpGet]
@@ -43,7 +47,7 @@ namespace ProjectManager.Controllers
             }
             catch
             {
-                RedirectToAction("Error", "Home");
+                return RedirectToAction("Error", "Home");
             }
 
             return RedirectToAction(nameof(Index));
@@ -126,11 +130,17 @@ namespace ProjectManager.Controllers
                     return NotFound();
                 }
 
+                var projects = await _projectsService.GetByClientAsync(client);
+                foreach (var project in projects)
+                {
+                    await _projectFilesService.DeleteAllProjectFilesAsync(project);
+                }
+                
                 await _clientsService.DeleteAsync(client);
             }
             catch
             {
-                RedirectToAction("Error", "Home");
+                return RedirectToAction("Error", "Home");
             }
             
             return RedirectToAction(nameof(Index));
