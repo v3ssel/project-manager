@@ -6,6 +6,7 @@ namespace ProjectManager.Application.Repositories
     {
         Task<Team?> GetByIdAsync(int id);
         Task<bool> ExistsByIdAsync(int id);
+        Task<bool> IsEmployeeInTeamAsync(Team team, Employee employee);
 
         Task AddEmployeeToTeamAsync(Team team, Employee employee, bool save);
         Task RemoveEmployeeFromTeamAsync(Team team, Employee employee, bool save);

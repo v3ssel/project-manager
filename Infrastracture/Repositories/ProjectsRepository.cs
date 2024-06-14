@@ -26,9 +26,7 @@ namespace ProjectManager.Infrastructure.Repositories
 
         public async Task<IEnumerable<Project>> SearchByNameAsync(string name)
         {
-            return await _dbSet.Include(x => x.Client)
-                               .Include(x => x.ProjectFiles)
-                               .Where(x => x.Name!.Contains(name))
+            return await _dbSet.Where(x => x.Name!.Contains(name))
                                .ToListAsync();
         }
 
@@ -50,13 +48,7 @@ namespace ProjectManager.Infrastructure.Repositories
 
         public async Task<IEnumerable<ProjectFile>> GetProjectFilesAsync(Guid projectId)
         {
-            var project = await _dbSet.FindAsync(projectId);
-            if (project == null)
-            {
-                throw new ArgumentException($"Project {projectId} not found.");
-            }
-
-            return project.ProjectFiles;
+            return await _context.ProjectFiles.Where(x => x.ProjectId == projectId).ToListAsync();
         }
 
         public async Task<ProjectFile?> GetProjectFileAsync(Guid projectId, int fileId)
