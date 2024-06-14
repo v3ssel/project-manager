@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<ProjectManager.Domain.Entities.Project>
+@using ProjectManager.Infrastructure.Data
 
 @{
     ViewData["Title"] = "Projects";
@@ -17,7 +18,7 @@
         <input type="datetime-local" id="endTimePicker" name="endTimePicker" onchange="applyDateFilters()" />
     </div>
 
-    @if (User.IsInRole("admin"))
+    @if (User.IsInRole(Constants.AdministratorRoleName))
     {
         <a asp-action="Create" class="btn btn-outline-info">Create project</a>
     }
@@ -82,12 +83,12 @@
             <td class="align-middle text-center">
                 <a class="btn btn-outline-info mt-1" asp-action="Details" asp-route-id="@item.Id">Details</a>
 
-                @if (User.IsInRole("admin") || User.IsInRole("manager"))
+                @if (User.IsInRole(Constants.AdministratorRoleName) || User.IsInRole(Constants.ManagerRoleName))
                 {
                     <a class="btn btn-outline-primary mt-1" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                 }
 
-                @if (User.IsInRole("admin"))
+                @if (User.IsInRole(Constants.AdministratorRoleName))
                 {
                     <a class="btn btn-outline-danger mt-1" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 }
@@ -141,8 +142,8 @@
             var tableBody = $('#projectsTableBody')
             tableBody.empty();
 
-            var isUserAdmin = '@User.IsInRole("admin")' === 'True'
-            var isUserManager = '@User.IsInRole("manager")' === 'True'
+            var isUserAdmin = '@User.IsInRole(Constants.AdministratorRoleName)' === 'True'
+            var isUserManager = '@User.IsInRole(Constants.ManagerRoleName)' === 'True'
 
             newProjectsData.forEach(project => {
                 var startTime = new Date(project.startTime)

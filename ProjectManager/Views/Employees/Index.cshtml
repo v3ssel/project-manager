@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<ProjectManager.Domain.Entities.Employee>
+@using ProjectManager.Infrastructure.Data
 
 @{
     ViewData["Title"] = "Employees";
@@ -7,7 +8,7 @@
 <div class="d-sm-flex flex-row align-items-end justify-content-between">
     <h1>@ViewData["Title"]</h1>
 
-    @if (User.IsInRole("admin"))
+    @if (User.IsInRole(Constants.AdministratorRoleName))
     {
         <a asp-action="Create" class="btn btn-outline-info">Add employee</a>
     }
@@ -44,7 +45,7 @@
                 <td class="align-middle text-center">
                     <a class="btn btn-outline-info mt-1" asp-action="Details" asp-route-id="@item.Id">Details</a>
 
-                    @if (User.IsInRole("admin"))
+                    @if (User.IsInRole(Constants.AdministratorRoleName))
                     {
                         <a class="btn btn-outline-primary mt-1" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                         <a class="btn btn-outline-danger mt-1" asp-action="Delete" asp-route-id="@item.Id">Delete</a>

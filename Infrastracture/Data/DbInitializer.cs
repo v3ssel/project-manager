@@ -6,9 +6,9 @@ namespace ProjectManager.Infrastructure.Data
     {
         public static async Task InitializeAsync(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            await CreateUserRole(userManager, roleManager, "admin@gmail.com", "admin", "_Aa123456");
-            await CreateUserRole(userManager, roleManager, "manager@gmail.com", "manager", "_Aa123456");
-            await CreateUserRole(userManager, roleManager, "employee@gmail.com", "employee", "_Aa123456");
+            await CreateUserRole(userManager, roleManager, $"{Constants.AdministratorRoleName}@gmail.com", Constants.AdministratorRoleName, "_Aa123456");
+            await CreateUserRole(userManager, roleManager, $"{Constants.ManagerRoleName}@gmail.com", Constants.ManagerRoleName, "_Aa123456");
+            await CreateUserRole(userManager, roleManager, $"{Constants.EmployeeRoleName}@gmail.com", Constants.EmployeeRoleName, "_Aa123456");
         }
 
         private static async Task CreateUserRole(UserManager<IdentityUser> userManager,

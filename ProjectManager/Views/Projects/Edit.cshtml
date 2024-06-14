@@ -1,4 +1,5 @@
 ﻿@model Web.Models.ProjectViewModel
+@using ProjectManager.Infrastructure.Data
 
 @{
     ViewData["Title"] = $"Edit {Model.Project!.Name}";
@@ -16,7 +17,7 @@
                 <label asp-for="Project.ClientId" class="control-label">Client</label>
                 <select asp-for="Project.ClientId" class="form-select"
                         asp-items="@(new SelectList(Model.Clients, "Id", "Name"))"
-                        disabled="@(!User.IsInRole("admin"))"></select>
+                        disabled="@(!User.IsInRole(Constants.AdministratorRoleName))"></select>
                 <span asp-validation-for="Project.ClientId" class="text-danger"></span>
             </div>
 

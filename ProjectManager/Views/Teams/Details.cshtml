@@ -1,4 +1,5 @@
 ﻿@model ProjectManager.Domain.Entities.Team
+@using ProjectManager.Infrastructure.Data
 
 @{
     ViewData["Title"] = "Team Details";
@@ -9,7 +10,7 @@
         <h2>Team @Model.Name Details</h2>
 
         <div class="mt-2 mb-2">
-            @if (User.IsInRole("admin") || User.IsInRole("manager"))
+            @if (User.IsInRole(Constants.AdministratorRoleName) || User.IsInRole(Constants.ManagerRoleName))
             {
                 @Html.ActionLink("Edit Team", "Edit", "Teams", new { id = Model.Id }, new { Class = "btn btn-outline-primary" })
             }
@@ -44,7 +45,7 @@
     <hr/>
 
     <h2>Members</h2>
-    @if(User.IsInRole("admin") || User.IsInRole("manager"))
+    @if(User.IsInRole(Constants.AdministratorRoleName) || User.IsInRole(Constants.ManagerRoleName))
     {
         @using(Html.BeginForm("AddMember", "Teams", FormMethod.Post))
         {
@@ -72,7 +73,7 @@
                 <th>Last Name</th>
                 <th>Email</th>
 
-                @if (!(Model.Members.Count == 1 && Model.Members.First().Id == Model.LeadId && !User.IsInRole("admin")))
+                @if (!(Model.Members.Count == 1 && Model.Members.First().Id == Model.LeadId && !User.IsInRole(Constants.AdministratorRoleName)))
                 {
                 <th></th>
                 }
@@ -96,15 +97,15 @@
                         @item.Email
                     </td>
 
-                    @if (!(Model.Lead.Id == item.Id && Model.Members.Count == 1 && !User.IsInRole("admin")))
+                    @if (!(Model.Lead.Id == item.Id && Model.Members.Count == 1 && !User.IsInRole(Constants.AdministratorRoleName)))
                     {
                     <td class="align-middle text-end">
-                        @if(User.IsInRole("admin"))
+                        @if(User.IsInRole(Constants.AdministratorRoleName))
                         {
                             @Html.ActionLink("Edit", "Edit", "Employees", new { id = @item.Id }, new { Class = "btn btn-outline-primary mt-1" })
                         }
 
-                        @if(Model.Lead.Id != item.Id && (User.IsInRole("admin") || User.IsInRole("manager")))
+                        @if(Model.Lead.Id != item.Id && (User.IsInRole(Constants.AdministratorRoleName) || User.IsInRole(Constants.ManagerRoleName)))
                         {
                             <button class="btn btn-outline-danger mt-1 remove_member_btn" data-team-id="@Model.Id" data-employee-id="@item.Id">Remove</button>
                         }

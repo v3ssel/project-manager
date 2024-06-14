@@ -1,4 +1,5 @@
 ﻿@model ProjectManager.Domain.Entities.Employee
+@using ProjectManager.Infrastructure.Data
 
 @{
     ViewData["Title"] = "Employee Details";
@@ -10,7 +11,7 @@
         <h3>@Model.FirstName @Model.MiddleName @Model.LastName</h3>
 
         <div class="mt-2 mb-2">
-            @if(User.IsInRole("admin"))
+            @if(User.IsInRole(Constants.AdministratorRoleName))
             {
                 @Html.ActionLink("Edit", "Edit", "Employees", new { id = Model.Id }, new { Class = "btn btn-outline-primary" })
             }
@@ -62,7 +63,7 @@
                 <th>Project</th>
                 <th>Is Lead</th>
 
-                @if (User.IsInRole("admin") || User.IsInRole("manager"))
+                @if (User.IsInRole(Constants.AdministratorRoleName) || User.IsInRole(Constants.ManagerRoleName))
                 {
                 <th></th>
                 }
@@ -86,7 +87,7 @@
                         @(item.LeadId == Model.Id ? "Yes" : "No")
                     </td>
 
-                    @if (User.IsInRole("admin") || User.IsInRole("manager"))
+                    @if (User.IsInRole(Constants.AdministratorRoleName) || User.IsInRole(Constants.ManagerRoleName))
                     {
                     <td class="align-middle text-end">
                             @Html.ActionLink("Edit Team", "Edit", "Teams", new { id = item.Id }, new { Class = "btn btn-outline-primary mt-1" })

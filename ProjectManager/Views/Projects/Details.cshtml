@@ -1,4 +1,5 @@
 ﻿@model ProjectManager.Domain.Entities.Project
+@using ProjectManager.Infrastructure.Data
 
 @{
     ViewData["Title"] = "Project Details";
@@ -10,7 +11,7 @@
         <h3>@Model.Name</h3>
 
         <div class="mt-2 mb-2">
-            @if (User.IsInRole("admin") || User.IsInRole("manager"))
+            @if (User.IsInRole(Constants.AdministratorRoleName) || User.IsInRole(Constants.ManagerRoleName))
             {
                 @Html.ActionLink("Edit", "Edit", "Projects", new { id = Model.Id }, new { Class = "btn btn-outline-primary" })
             }
@@ -68,7 +69,7 @@
             <div class="d-flex flex-row justify-content-between">
                 @Html.ActionLink(item.FileName, "Download", "Projects", new { projectId = Model.Id, fileId = item.Id }, new { Class = "btn btn-outline-info mb-2 flex-grow-1" })
 
-                @if (User.IsInRole("admin") || User.IsInRole("manager"))
+                @if (User.IsInRole(Constants.AdministratorRoleName) || User.IsInRole(Constants.ManagerRoleName))
                 {
                     <button class="btn btn-outline-danger mb-2 ms-2 remove_file_btn" type="submit" data-project-id="@Model.Id" data-file-id="@item.Id">Remove</button>
                 }

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using ProjectManager.Infrastructure.Data
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -20,7 +22,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (User.IsInRole("admin"))
+                        @if (User.IsInRole(Constants.AdministratorRoleName))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
@@ -34,7 +36,7 @@
                             </li>
                         }
                         
-                        @if (User.IsInRole("admin") || User.IsInRole("manager"))
+                        @if (User.IsInRole(Constants.AdministratorRoleName) || User.IsInRole(Constants.ManagerRoleName))
                         { 
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="Index">Employees</a>
